@@ -1,0 +1,71 @@
+// ATENÇÃO:
+// Este arquivo é gerado automaticamente.
+// Edite prisma/models.prisma, não este arquivo.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  passwordHash String?
+  memberships  Membership[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Organization {
+  id           String       @id @default(cuid())
+  name         String
+  slug         String       @unique
+  memberships  Membership[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Membership {
+  id             String       @id @default(cuid())
+
+  // String para funcionar igual em SQLite DEV e PostgreSQL PROD.
+  // Valores esperados: OWNER, ADMIN, MEMBER.
+  role           String       @default("MEMBER")
+
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime     @default(now())
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  action         String
+  entity         String
+  entityId       String?
+  organizationId String?
+  userId         String?
+
+  // String para manter compatibilidade simples entre SQLite e PostgreSQL.
+  // Guarde JSON serializado aqui se precisar.
+  metadata       String?
+
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([entity])
+}
+

@@ -1,0 +1,48 @@
+{
+  "name": "sistema-requisite",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm run prisma:dev && dotenv -e .env.development -- tsx watch src/server.ts",
+    "build": "npm run prisma:prod && tsc",
+    "start": "dotenv -e .env.production -- node dist/server.js",
+    "prisma:dev": "node scripts/write-prisma-schema.mjs dev && dotenv -e .env.development -- prisma generate",
+    "prisma:prod": "node scripts/write-prisma-schema.mjs prod && dotenv -e .env.production -- prisma generate",
+    "db:dev": "node scripts/write-prisma-schema.mjs dev && dotenv -e .env.development -- prisma db push",
+    "db:prod:migrate": "node scripts/write-prisma-schema.mjs prod && dotenv -e .env.production -- prisma migrate deploy",
+    "db:prod:create-migration": "node scripts/write-prisma-schema.mjs prod && dotenv -e .env.production -- prisma migrate dev",
+    "studio:dev": "node scripts/write-prisma-schema.mjs dev && dotenv -e .env.development -- prisma studio",
+    "studio:prod": "node scripts/write-prisma-schema.mjs prod && dotenv -e .env.production -- prisma studio"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Konazin/sistema-requisite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Konazin/sistema-requisite/issues"
+  },
+  "homepage": "https://github.com/Konazin/sistema-requisite#readme",
+  "type": "module",
+  "private": "true",
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/jwt": "^10.1.0",
+    "@prisma/client": "^6.19.3",
+    "dotenv": "^17.4.2",
+    "fastify": "^5.8.5",
+    "fastify-plugin": "^6.0.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "dotenv-cli": "^11.0.0",
+    "prisma": "^6.19.3",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
